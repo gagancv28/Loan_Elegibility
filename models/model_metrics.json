@@ -1,0 +1,25 @@
+{
+  "roc_auc": 0.8534,
+  "cv_roc_auc_mean": 0.7652,
+  "cv_roc_auc_std": 0.022,
+  "accuracy": 0.8571,
+  "precision": 0.85,
+  "recall": 0.9623,
+  "f1_score": 0.9027,
+  "confusion_matrix": [
+    [
+      30,
+      18
+    ],
+    [
+      4,
+      102
+    ]
+  ],
+  "n_train": 460,
+  "n_test": 154,
+  "n_total": 614,
+  "approval_rate": 0.6873,
+  "data_source": "Analytics Vidhya Loan Prediction Dataset (614 real records)",
+  "model_type": "CalibratedClassifierCV(GradientBoostingClassifier)"
+}
