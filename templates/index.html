@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Veritas Credit Underwriting Portal — AI-powered loan eligibility and risk assessment system using real banking data and explainable AI.">
+  <meta name="author" content="Veritas Financial Intelligence">
+  <title>Veritas Credit Underwriting Portal</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=clean_v3">
+</head>
+<body>
+
+<!-- ============================================================
+     SITE HEADER / MASTHEAD
+     ============================================================ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand-lockup">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">Veritas</span>
+        <span class="brand-subtitle">Credit Underwriting Portal</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <span class="header-badge badge-live">AI Engine Live</span>
+      <button class="btn-governance" id="btn-governance">
+        Model Governance &amp; Validation
+      </button>
+    </div>
+  </div>
+</header>
+
+
+<!-- ============================================================
+     MAIN TWO-COLUMN LAYOUT
+     ============================================================ -->
+<main class="app-layout">
+
+  <!-- ========================================================
+       LEFT COLUMN — Applicant Financial Profile Form
+       ======================================================== -->
+  <aside class="panel-left">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Applicant Financial Profile</div>
+          <div class="card-subtitle">Complete all fields to initiate underwriting assessment</div>
+        </div>
+      </div>
+
+      <div class="card-body">
+
+        <!-- Persona Selector -->
+        <div class="persona-selector">
+          <label for="persona-select">Load Sample Applicant Profile</label>
+          <div class="persona-select-wrap">
+            <select id="persona-select">
+              <option value="">— Select a demo persona —</option>
+              {% for key, label in personas.items() %}
+              <option value="{{ key }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <!-- Section: Income -->
+        <div class="form-section">
+          <div class="form-section-title">Monthly Income (₹)</div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span class="form-label-text">Applicant Income</span>
+              <span class="form-label-value" id="s-app-income-display">₹80.00K</span>
+            </div>
+            <div class="input-pair">
+              <input type="range" id="s-app-income" min="10000" max="500000" step="1000" value="80000">
+              <input type="number" id="i-app-income" class="number-input" min="10000" max="500000" step="1000" value="80000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span class="form-label-text">Co-applicant Income</span>
+              <span class="form-label-value" id="s-coapp-income-display">₹0</span>
+            </div>
+            <div class="input-pair">
+              <input type="range" id="s-coapp-income" min="0" max="300000" step="1000" value="0">
+              <input type="number" id="i-coapp-income" class="number-input" min="0" max="300000" step="1000" value="0">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span class="form-label-text">Existing Monthly Debt</span>
+              <span class="form-label-value" id="s-existing-debt-display">₹12.0K</span>
+            </div>
+            <div class="input-pair">
+              <input type="range" id="s-existing-debt" min="0" max="150000" step="500" value="12000">
+              <input type="number" id="i-existing-debt" class="number-input" min="0" max="150000" step="500" value="12000">
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Loan Details -->
+        <div class="form-section">
+          <div class="form-section-title">Loan Request Details</div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span class="form-label-text">Requested Loan Amount</span>
+              <span class="form-label-value" id="s-loan-amount-display">₹15.00L</span>
+            </div>
+            <div class="input-pair">
+              <input type="range" id="s-loan-amount" min="100000" max="10000000" step="50000" value="1500000">
+              <input type="number" id="i-loan-amount" class="number-input" min="100000" max="10000000" step="50000" value="1500000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span class="form-label-text">Loan Tenure</span>
+              <span class="form-label-value" id="s-loan-term-display">180 mo</span>
+            </div>
+            <div class="input-pair">
+              <input type="range" id="s-loan-term" min="12" max="360" step="12" value="180">
+              <input type="number" id="i-loan-term" class="number-input" min="12" max="360" step="12" value="180">
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Credit & Employment -->
+        <div class="form-section">
+          <div class="form-section-title">Credit &amp; Employment Profile</div>
+
+          <!-- Credit Score & NTC Toggle -->
+          <div class="form-group" id="group-credit-score">
+            <div class="form-label-row">
+              <div class="form-label">
+                <span class="form-label-text">Credit Score:</span>
+                <span class="form-label-value" id="s-credit-score-display">720</span>
+              </div>
+              <div class="ntc-toggle-wrap">
+                <label class="ntc-checkbox-label" for="chk-ntc">
+                  <input type="checkbox" id="chk-ntc" class="ntc-checkbox">
+                  <span class="ntc-custom-check"></span>
+                  <span class="ntc-label-text">New-to-Credit (NTC) / No Bureau History (-1 / NH)</span>
+                </label>
+              </div>
+            </div>
+
+            <div id="credit-score-slider-wrap" class="input-pair">
+              <input type="range" id="s-credit-score" min="300" max="850" step="1" value="720">
+              <input type="number" id="i-credit-score" class="number-input" min="300" max="850" step="1" value="720">
+            </div>
+
+            <!-- NTC Disabled State Badge -->
+            <div id="ntc-active-badge" class="ntc-active-badge" style="display: none;">
+              <svg viewBox="0 0 24 24" class="badge-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>NTC — Cash-Flow Mode (RBI Account Aggregator)</span>
+            </div>
+          </div>
+
+          <!-- Alternative Cash-Flow Data (RBI Account Aggregator) -->
+          <div id="ntc-cashflow-section" class="ntc-cashflow-section" style="display: none;">
+            <div class="ntc-section-header">
+              <div class="ntc-header-title">ALTERNATIVE CASH-FLOW DATA (RBI ACCOUNT AGGREGATOR)</div>
+              <div class="ntc-info-banner">
+                <svg viewBox="0 0 24 24" class="info-icon"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                <span><strong>Mandatory AA Bank Statement Lookback:</strong> Last 6 Months (Salaried) | Last 12 Months (Self-Employed / Business)</span>
+              </div>
+            </div>
+
+            <!-- Statement Ingestion: Upload Zone -->
+            <div class="statement-ingest-box">
+              <input type="file" id="statement-file-input" accept=".csv,.xlsx,.xls,.pdf" style="display: none;">
+              
+              <div id="statement-dropzone" class="statement-dropzone">
+                <div class="dropzone-icon">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                </div>
+                <div class="dropzone-text">
+                  <strong id="dropzone-filename">Upload Bank Statement (.pdf, .xlsx, .xls, .csv)</strong>
+                  <span>Drag &amp; drop or click to browse (HDFC, SBI, ICICI, Axis, Kotak, etc.)</span>
+                </div>
+              </div>
+
+              <!-- Password & Analyze Row -->
+              <div class="statement-pwd-row">
+                <div class="pwd-input-wrap">
+                  <input type="password" id="statement-password" class="statement-pwd-input" placeholder="PDF Password (if locked)">
+                </div>
+                <button type="button" id="btn-parse-upload" class="btn-parse-upload">
+                  <span>Analyze Statement</span>
+                </button>
+              </div>
+
+              <!-- Privacy Assurance Badge -->
+              <div class="statement-privacy-badge">
+                <svg viewBox="0 0 24 24" class="lock-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span>🔒 Processed Locally in Memory — Zero External Upload</span>
+              </div>
+
+              <!-- 1-Click Simulation Buttons -->
+              <div class="statement-sim-row">
+                <button type="button" id="btn-sim-salaried" class="btn-sim btn-sim-salaried" title="Loads 6-month HDFC salaried statement with clean UPI discipline">
+                  <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <span>Simulate 6-Mo Salaried AA Fetch</span>
+                </button>
+                <button type="button" id="btn-sim-business" class="btn-sim btn-sim-business" title="Loads 12-month SBI current account with 3 ECS/NACH bounces">
+                  <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span>Simulate 12-Mo Business AA Fetch (With Bounces)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- AA Bank Statement Audit Summary Card (Appears after parsing) -->
+            <div id="statement-audit-card" class="statement-audit-card" style="display: none;">
+              <div class="audit-card-header">
+                <div class="audit-badge">AA STATEMENT AUDIT SUMMARY</div>
+                <div id="audit-filename" class="audit-filename">statement.csv</div>
+              </div>
+              <div class="audit-metrics-grid">
+                <div class="audit-metric-item">
+                  <div class="audit-metric-label">Analyzed Period</div>
+                  <div class="audit-metric-val" id="audit-txns-count">67 txns (6 Mo)</div>
+                </div>
+                <div class="audit-metric-item">
+                  <div class="audit-metric-label">Verified Monthly Inflow</div>
+                  <div class="audit-metric-val" id="audit-monthly-inflow">₹65.1K/mo</div>
+                </div>
+                <div class="audit-metric-item">
+                  <div class="audit-metric-label">Computed ABB</div>
+                  <div class="audit-metric-val" id="audit-abb">₹55.0K</div>
+                </div>
+                <div class="audit-metric-item">
+                  <div class="audit-metric-label">Net Monthly Surplus</div>
+                  <div class="audit-metric-val" id="audit-surplus">+₹6.1K/mo</div>
+                </div>
+                <div class="audit-metric-item audit-metric-full">
+                  <div class="audit-metric-label">ECS / Cheque Bounces</div>
+                  <div class="audit-metric-val" id="audit-bounces-wrap">
+                    <span id="audit-bounces" class="bounce-clean-pill">0 Detected (Clean)</span>
+                  </div>
+                </div>
+              </div>
+              <div class="audit-sync-note">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Income, Lookback Tenure, ABB, and Utility Consistency synchronized into underwriter model.</span>
+              </div>
+            </div>
+
+            <!-- Manual Overrides & Verification (Auto-populated from statement) -->
+            <div class="form-group" style="margin-top: var(--space-4);">
+              <div class="form-label">
+                <span class="form-label-text">Verified Bank Statement Tenure</span>
+              </div>
+              <select id="sel-statement-tenure" class="form-select">
+                <option value="6">6 Months Statement (Salaried Standard)</option>
+                <option value="12">12 Months Statement (Self-Employed / Seasonal Standard)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">
+                <span class="form-label-text">Average Monthly Bank Balance — ABB (₹)</span>
+                <span class="form-label-value" id="s-abb-display">₹50.00K</span>
+              </div>
+              <div class="input-pair">
+                <input type="range" id="s-abb" min="5000" max="500000" step="5000" value="50000">
+                <input type="number" id="i-abb" class="number-input" min="5000" max="500000" step="5000" value="50000">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">
+                <span class="form-label-text">Utility, Rent &amp; UPI Repayment Consistency</span>
+              </div>
+              <select id="sel-utility-consistency" class="form-select">
+                <option value="High">High (Zero Bounces / 100% On-Time Bills)</option>
+                <option value="Moderate">Moderate (1 Minor Delay in Lookback Window)</option>
+                <option value="Low">Low (Frequent Overdrafts / Bounces)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span class="form-label-text">Employment Length</span>
+              <span class="form-label-value" id="s-emp-length-display">6 yr</span>
+            </div>
+            <div class="input-pair">
+              <input type="range" id="s-emp-length" min="0" max="30" step="1" value="6">
+              <input type="number" id="i-emp-length" class="number-input" min="0" max="30" step="1" value="6">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span class="form-label-text">Employment Type</span>
+            </div>
+            <select id="sel-employment-type" class="form-select">
+              <option value="Salaried">Salaried</option>
+              <option value="Self-Employed">Self-Employed</option>
+              <option value="Business Owner">Business Owner</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span class="form-label-text">Property Area</span>
+            </div>
+            <select id="sel-property-area" class="form-select">
+              <option value="Urban">Urban</option>
+              <option value="Semi-Urban">Semi-Urban</option>
+              <option value="Rural">Rural</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label">
+              <span class="form-label-text">Prior Loan Default</span>
+            </div>
+            <div class="toggle-group">
+              <button class="toggle-btn active-no" id="toggle-default-no" type="button">No Prior Default</button>
+              <button class="toggle-btn" id="toggle-default-yes" type="button">Has Defaulted</button>
+            </div>
+            <input type="hidden" id="h-prior-defaults" value="0">
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button class="btn-assess" id="btn-assess" type="button">
+          <div class="spinner"></div>
+          <span class="btn-text">Run Underwriting Assessment</span>
+        </button>
+
+      </div><!-- /card-body -->
+    </div><!-- /card -->
+  </aside><!-- /panel-left -->
+
+
+  <!-- ========================================================
+       RIGHT COLUMN — Decision & XAI Panel
+       ======================================================== -->
+  <section class="panel-right" id="decision-panel">
+
+    <!-- Empty State (shown before first assessment) -->
+    <div class="empty-state" id="empty-state">
+      <div class="empty-state-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+        </svg>
+      </div>
+      <h3>Awaiting Applicant Submission</h3>
+      <p>Complete the financial profile on the left and click <strong>Run Underwriting Assessment</strong> to receive an AI-powered credit decision with full explainability.</p>
+    </div>
+
+  </section><!-- /panel-right -->
+
+</main><!-- /app-layout -->
+
+
+<!-- ============================================================
+     SITE FOOTER
+     ============================================================ -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-note">
+      <strong>Veritas Credit Underwriting Portal</strong> &mdash; AI for Finance Project &middot;
+      CIA-2 Assessment &middot; Built with Flask &amp; Scikit-learn &middot;
+      Data: <a href="https://github.com/shrikant-temburwar/Loan-Prediction-Dataset" target="_blank" rel="noopener">Analytics Vidhya Loan Prediction Dataset</a>
+    </p>
+    <div class="footer-data-badge">614 Real Records · GBC + Platt Calibration</div>
+  </div>
+</footer>
+
+
+<!-- ============================================================
+     MODEL GOVERNANCE MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="governance-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div>
+        <div class="modal-head-title" id="modal-title">Model Governance &amp; Validation Report</div>
+        <div class="modal-head-sub">Veritas Credit Engine v2.0 &mdash; Performance Metrics &amp; Audit Trail</div>
+      </div>
+      <button class="modal-close" id="modal-close" aria-label="Close modal">&times;</button>
+    </div>
+    <div class="modal-content" id="modal-metrics-content">
+      <!-- Dynamically injected by main.js -->
+    </div>
+  </div>
+</div>
+
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}?v=clean_v3"></script>
+</body>
+</html>
