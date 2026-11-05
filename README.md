@@ -11,6 +11,14 @@ Veritas is an institutional-grade credit underwriting and risk assessment engine
 
 ---
 
+## 🎬 Product Launch Video
+
+[![Veritas Credit Underwriting Portal Launch Video](brag-output/brag.jpg)](brag-output/brag.mp4)
+
+> **Watch the Launch Video:** Download or play [`brag-output/brag.mp4`](brag-output/brag.mp4) (18-second 1080p demo highlighting sub-200ms risk scoring, XAI factor contributions, and automated credit memorandums).
+
+---
+
 ## 🏛️ Key Capabilities
 
 - **Calibrated ML Credit Decisioning**: Powered by a `GradientBoostingClassifier` calibrated via 5-fold Platt scaling (`CalibratedClassifierCV`) to deliver true statistical posterior probabilities aligned with Basel II/III Internal Ratings-Based (IRB) standards.
@@ -155,3 +163,4 @@ This system explicitly excludes protected demographic characteristics (`Gender`,
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
+

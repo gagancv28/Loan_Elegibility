@@ -62,3 +62,8 @@ htmlcov/
 *.log
 tmp/
 temp/
+
+# Hyperframes internal caches & history
+brag-output/composition/.hyperframes/
+
+
