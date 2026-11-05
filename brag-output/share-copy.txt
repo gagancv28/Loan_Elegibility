@@ -1,0 +1,33 @@
+# Share Copy for Veritas Credit Underwriting Portal Launch Video
+
+## Twitter / X / Threads
+Credit underwriting without the black box. 🏛️⚡️
+
+We built Veritas: an institutional AI credit portal that scores loan applications in <200ms with calibrated Gradient Boosting, Explainable AI (+/- pp factor contributions), and automated RBI Account Aggregator cash-flow underwriting.
+
+Full code & model governance metrics: https://github.com/gagancv28/Loan_Elegibility
+
+#Fintech #MachineLearning #ExplainableAI #CreditRisk #Python #Banking
+
+---
+
+## LinkedIn
+Excited to share Veritas — an AI-Powered Credit Underwriting & Risk Assessment System.
+
+Traditional retail underwriting often forces lenders to choose between opaque black-box models or slow manual evaluations. Veritas bridges this gap:
+
+🔹 Calibrated Probabilities: Platt-scaled Gradient Boosting (ROC-AUC 85.34%, 96.2% Recall)
+🔹 Explainable AI (XAI): Transparent local attribution (+/- percentage points) compliant with RBI Fair Practices & ECOA
+🔹 New-to-Credit (NTC) Cash-Flow Mode: Account Aggregator engine extracting ABB, liquidity coverage ratios, and detecting ECS/NACH bounces
+🔹 Automated Credit Memorandum: Instant institutional sanction memorandums
+
+Check out the full repository: https://github.com/gagancv28/Loan_Elegibility
+
+---
+
+## GitHub / Discord
+🚀 Veritas Credit Underwriting Portal launch video:
+- Rendered MP4: `brag-output/brag.mp4`
+- Duration: 18s (1080p landscape, 30fps)
+- Video showcase: Live loan decisioning, XAI contribution bars, 3-layer statement parser, and credit memo sanction stamp.
+

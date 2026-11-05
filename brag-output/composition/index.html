@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Veritas Credit Underwriting Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --ground: #F9F8F6;
+        --surface: #FFFFFF;
+        --border: #E5E7EB;
+        --ink: #111827;
+        --ink-muted: #4B5563;
+        --ink-light: #9CA3AF;
+        --forest: #0F4C3A;
+        --forest-glow: rgba(15, 76, 58, 0.12);
+        --green: #166534;
+        --green-bg: #DCFCE7;
+        --red: #B91C1C;
+        --red-bg: #FEE2E2;
+        --amber: #B45309;
+        --font-serif: 'Newsreader', Georgia, serif;
+        --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--ground);
+        color: var(--ink);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+      }
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: radial-gradient(circle at 50% 20%, rgba(15, 76, 58, 0.05) 0%, transparent 70%), var(--ground);
+      }
+
+      /* Global Header */
+      .top-nav {
+        position: absolute;
+        top: 40px;
+        left: 80px;
+        right: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 100;
+      }
+      .brand-wrap {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .brand-icon {
+        width: 48px;
+        height: 48px;
+        background: var(--forest);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 14px rgba(15, 76, 58, 0.25);
+      }
+      .brand-icon svg {
+        width: 28px;
+        height: 28px;
+        fill: none;
+        stroke: #FFFFFF;
+        stroke-width: 2.2;
+      }
+      .brand-text h1 {
+        font-family: var(--font-serif);
+        font-size: 32px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+      }
+      .brand-text span {
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--forest);
+      }
+      .live-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 18px;
+        background: var(--surface);
+        border: 1px solid #D1D5DB;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--forest);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      }
+      .live-dot {
+        width: 8px;
+        height: 8px;
+        background: #10B981;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #10B981;
+      }
+
+      /* Scene Container Styles */
+      .scene {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1920px;
+        height: 1080px;
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      /* SCENE 1: HOOK */
+      #scene-1 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0 120px;
+      }
+      .badge-category {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--forest);
+        background: var(--forest-glow);
+        padding: 10px 24px;
+        border-radius: 999px;
+        margin-bottom: 28px;
+        border: 1px solid rgba(15, 76, 58, 0.2);
+      }
+      .hook-title {
+        font-family: var(--font-serif);
+        font-size: 88px;
+        font-weight: 600;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        color: var(--ink);
+        max-width: 1400px;
+        margin-bottom: 32px;
+      }
+      .hook-title em {
+        font-style: italic;
+        color: var(--forest);
+      }
+      .hook-sub {
+        font-size: 26px;
+        color: var(--ink-muted);
+        max-width: 900px;
+        line-height: 1.5;
+        font-weight: 400;
+      }
+
+      /* SCENE 2: DECISION & KPIS */
+      #scene-2 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 140px 140px 80px;
+      }
+      .decision-banner {
+        width: 100%;
+        max-width: 1440px;
+        background: var(--surface);
+        border: 2px solid #86EFAC;
+        border-radius: 20px;
+        padding: 36px 48px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 16px 36px rgba(22, 101, 52, 0.08);
+        margin-bottom: 32px;
+        position: relative;
+        overflow: hidden;
+      }
+      .decision-banner::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 10px;
+        background: var(--green);
+      }
+      .decision-left {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+      .check-badge {
+        width: 64px;
+        height: 64px;
+        background: var(--green);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .check-badge svg {
+        width: 36px;
+        height: 36px;
+        stroke: #FFFFFF;
+        stroke-width: 3;
+        fill: none;
+      }
+      .decision-text h2 {
+        font-family: var(--font-serif);
+        font-size: 46px;
+        font-weight: 600;
+        color: var(--green);
+        line-height: 1.1;
+      }
+      .decision-text p {
+        font-size: 20px;
+        color: var(--ink-muted);
+        margin-top: 4px;
+      }
+      .decision-right {
+        text-align: right;
+      }
+      .prob-num {
+        font-family: var(--font-mono);
+        font-size: 68px;
+        font-weight: 700;
+        color: var(--green);
+        line-height: 1;
+      }
+      .prob-lbl {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--ink-light);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-top: 6px;
+      }
+
+      .kpi-row {
+        width: 100%;
+        max-width: 1440px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+      }
+      .kpi-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 28px 24px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+      }
+      .kpi-lbl {
+        font-size: 15px;
+        color: var(--ink-muted);
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+      .kpi-val {
+        font-family: var(--font-mono);
+        font-size: 36px;
+        font-weight: 700;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+      }
+      .kpi-tag {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-top: 8px;
+      }
+      .tag-good { background: var(--green-bg); color: var(--green); }
+      .tag-forest { background: var(--forest-glow); color: var(--forest); }
+
+      /* SCENE 3: XAI & PARSER */
+      #scene-3 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 130px 100px 60px;
+        gap: 40px;
+      }
+      .split-card {
+        flex: 1;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 36px 40px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.04);
+        height: 640px;
+        display: flex;
+        flex-direction: column;
+      }
+      .card-title-head {
+        font-family: var(--font-serif);
+        font-size: 32px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--ink);
+      }
+      .card-sub-head {
+        font-size: 16px;
+        color: var(--ink-muted);
+        margin-bottom: 24px;
+      }
+      .xai-bars-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 10px;
+      }
+      .xai-row {
+        display: grid;
+        grid-template-columns: 200px 1fr 80px;
+        align-items: center;
+        gap: 16px;
+      }
+      .xai-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .xai-track {
+        position: relative;
+        height: 24px;
+        background: #F3F4F6;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+      .xai-center {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #9CA3AF;
+        z-index: 2;
+      }
+      .xai-bar-fill {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        border-radius: 4px;
+        width: 0%;
+      }
+      .xai-pos {
+        left: 50%;
+        background: var(--green);
+      }
+      .xai-neg {
+        right: 50%;
+        background: var(--red);
+      }
+      .xai-val {
+        font-family: var(--font-mono);
+        font-size: 15px;
+        font-weight: 700;
+        text-align: right;
+      }
+
+      /* Right Parser Card */
+      .audit-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 8px;
+      }
+      .audit-item {
+        background: #F9FAFB;
+        border: 1px solid #E5E7EB;
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .audit-item-lbl {
+        font-size: 13px;
+        color: var(--ink-light);
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .audit-item-val {
+        font-family: var(--font-mono);
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--ink);
+      }
+      .layer-pill-box {
+        margin-top: 24px;
+        padding: 16px 20px;
+        background: #ECFDF5;
+        border: 1px solid #A7F3D0;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .layer-pill-box svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--green);
+        fill: none;
+        stroke-width: 2.2;
+      }
+
+      /* SCENE 4: MEMORANDUM & OUTRO */
+      #scene-4 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0 140px;
+      }
+      .memo-preview-box {
+        width: 100%;
+        max-width: 1100px;
+        background: var(--surface);
+        border: 2px solid var(--border);
+        border-radius: 20px;
+        padding: 44px 56px;
+        box-shadow: 0 20px 48px rgba(0,0,0,0.06);
+        text-align: left;
+        margin-bottom: 36px;
+        position: relative;
+      }
+      .memo-stamp-graphic {
+        position: absolute;
+        top: 36px;
+        right: 48px;
+        padding: 8px 24px;
+        border: 3px solid var(--green);
+        color: var(--green);
+        font-family: var(--font-mono);
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border-radius: 8px;
+        transform: rotate(-6deg);
+      }
+      .memo-head-title {
+        font-family: var(--font-serif);
+        font-size: 32px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .memo-head-sub {
+        font-size: 15px;
+        color: var(--ink-light);
+        margin-top: 4px;
+        margin-bottom: 24px;
+      }
+      .memo-excerpt {
+        font-size: 18px;
+        line-height: 1.6;
+        color: var(--ink-muted);
+        border-left: 4px solid var(--forest);
+        padding-left: 20px;
+      }
+      .outro-cta-row {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+      .cta-title {
+        font-family: var(--font-serif);
+        font-size: 42px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .repo-badge {
+        font-family: var(--font-mono);
+        font-size: 18px;
+        font-weight: 600;
+        color: #FFFFFF;
+        background: var(--forest);
+        padding: 14px 28px;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(15, 76, 58, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="18"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- Media Track Declarations (Managed by Hyperframes) -->
+      <audio
+        id="audio-track"
+        src="assets/music/track.mp3"
+        data-start="0"
+        data-duration="18"
+        data-volume="0.8"
+      ></audio>
+      <audio
+        id="sfx-card"
+        src="assets/sfx/card.ogg"
+        data-start="4.6"
+        data-duration="1.5"
+        data-volume="0.7"
+      ></audio>
+      <audio
+        id="sfx-switch"
+        src="assets/sfx/switch.ogg"
+        data-start="9.1"
+        data-duration="1.5"
+        data-volume="0.7"
+      ></audio>
+      <audio
+        id="sfx-click"
+        src="assets/sfx/click.ogg"
+        data-start="13.6"
+        data-duration="1.5"
+        data-volume="0.7"
+      ></audio>
+
+      <!-- Top Persistent Navigation -->
+      <header class="top-nav">
+        <div class="brand-wrap">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1>Veritas</h1>
+            <span>Credit Underwriting Portal</span>
+          </div>
+        </div>
+        <div class="live-pill">
+          <div class="live-dot"></div>
+          <span>Calibrated ML Engine · ROC-AUC 85.3%</span>
+        </div>
+      </header>
+
+      <!-- SCENE 1: HOOK (0s - 4.5s) -->
+      <section id="scene-1" class="scene">
+        <div class="badge-category" id="s1-badge">Next-Gen Credit Intelligence</div>
+        <h2 class="hook-title" id="s1-title">Credit Underwriting Without the <em>Black Box</em>.</h2>
+        <p class="hook-sub" id="s1-sub">Sub-200ms loan eligibility assessment with audited machine learning, explainable AI, and forensic cash-flow analysis.</p>
+      </section>
+
+      <!-- SCENE 2: LIVE DECISION & KPIS (4.5s - 9.0s) -->
+      <section id="scene-2" class="scene">
+        <div class="decision-banner" id="s2-banner">
+          <div class="decision-left">
+            <div class="check-badge">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <div class="decision-text">
+              <h2>Loan Approved</h2>
+              <p>Risk Classification: <strong>Low Risk Borrower</strong> · Tier 1 Prime</p>
+            </div>
+          </div>
+          <div class="decision-right">
+            <div class="prob-num">87%</div>
+            <div class="prob-lbl">Approval Probability</div>
+          </div>
+        </div>
+
+        <div class="kpi-row" id="s2-kpis">
+          <div class="kpi-card">
+            <div class="kpi-lbl">Monthly EMI</div>
+            <div class="kpi-val">₹15,660</div>
+            <span class="kpi-tag tag-forest">9.5% p.a. Amortization</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">Debt-to-Income (DTI)</div>
+            <div class="kpi-val">29.6%</div>
+            <span class="kpi-tag tag-good">Healthy Obligation</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">Loan-to-Income (LTI)</div>
+            <div class="kpi-val">1.85×</div>
+            <span class="kpi-tag tag-good">Conservative Leverage</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-lbl">Bureau Segment</div>
+            <div class="kpi-val">780</div>
+            <span class="kpi-tag tag-good">Prime CIBIL Rating</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 3: EXPLAINABLE AI & FORENSIC STATEMENT (9.0s - 13.5s) -->
+      <section id="scene-3" class="scene">
+        <!-- Left: XAI Contributions -->
+        <div class="split-card" id="s3-card-left">
+          <h3 class="card-title-head">Explainable AI (XAI)</h3>
+          <p class="card-sub-head">Local factor contributions to approval probability (+/- pp)</p>
+          
+          <div class="xai-bars-wrap">
+            <div class="xai-row">
+              <span class="xai-name">Credit Score (780)</span>
+              <div class="xai-track">
+                <div class="xai-center"></div>
+                <div class="xai-bar-fill xai-pos" id="bar-cs"></div>
+              </div>
+              <span class="xai-val" style="color:var(--green)">+12.4pp</span>
+            </div>
+
+            <div class="xai-row">
+              <span class="xai-name">Debt-to-Income (29.6%)</span>
+              <div class="xai-track">
+                <div class="xai-center"></div>
+                <div class="xai-bar-fill xai-pos" id="bar-dti"></div>
+              </div>
+              <span class="xai-val" style="color:var(--green)">+5.8pp</span>
+            </div>
+
+            <div class="xai-row">
+              <span class="xai-name">Monthly Inflow Stability</span>
+              <div class="xai-track">
+                <div class="xai-center"></div>
+                <div class="xai-bar-fill xai-pos" id="bar-income"></div>
+              </div>
+              <span class="xai-val" style="color:var(--green)">+4.5pp</span>
+            </div>
+
+            <div class="xai-row">
+              <span class="xai-name">Loan-to-Income Ratio</span>
+              <div class="xai-track">
+                <div class="xai-center"></div>
+                <div class="xai-bar-fill xai-pos" id="bar-lti"></div>
+              </div>
+              <span class="xai-val" style="color:var(--green)">+3.2pp</span>
+            </div>
+
+            <div class="xai-row">
+              <span class="xai-name">Prior Defaults (0)</span>
+              <div class="xai-track">
+                <div class="xai-center"></div>
+                <div class="xai-bar-fill xai-pos" id="bar-default"></div>
+              </div>
+              <span class="xai-val" style="color:var(--green)">+5.0pp</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Forensic Statement Parser -->
+        <div class="split-card" id="s3-card-right">
+          <h3 class="card-title-head">Forensic Cash-Flow Engine</h3>
+          <p class="card-sub-head">RBI Account Aggregator 3-Layer Statement Ingestion</p>
+
+          <div class="audit-grid">
+            <div class="audit-item">
+              <div class="audit-item-lbl">Verified Salary Inflow</div>
+              <div class="audit-item-val">₹1,20,000<span style="font-size:16px">/mo</span></div>
+            </div>
+            <div class="audit-item">
+              <div class="audit-item-lbl">Average Bank Balance (ABB)</div>
+              <div class="audit-item-val">₹55,400</div>
+            </div>
+            <div class="audit-item">
+              <div class="audit-item-lbl">Net Monthly Surplus</div>
+              <div class="audit-item-val">+₹38,200</div>
+            </div>
+            <div class="audit-item">
+              <div class="audit-item-lbl">NACH / ECS Returns</div>
+              <div class="audit-item-val" style="color:var(--green)">0 (Clean)</div>
+            </div>
+          </div>
+
+          <div class="layer-pill-box">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div>
+              <div style="font-weight:700; color:var(--green); font-size:15px;">Zero-Crash In-Memory Architecture</div>
+              <div style="font-size:13px; color:var(--ink-muted);">100% transient memory processing · Zero client data stored on disk</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCENE 4: CREDIT MEMO & OUTRO (13.5s - 18s) -->
+      <section id="scene-4" class="scene">
+        <div class="memo-preview-box" id="s4-memo">
+          <div class="memo-stamp-graphic">SANCTIONED</div>
+          <div class="memo-head-title">Automated Underwriter Credit Memorandum</div>
+          <div class="memo-head-sub">Veritas Credit Engine v2.0 · Fair Lending & Basel II Compliant</div>
+          <div class="memo-excerpt">
+            "Based on verified Account Aggregator cash-flow liquidity and debt-service capacity, this application is recommended for <strong>unconditional approval</strong>. The borrower demonstrates strong liquidity buffers, balanced debt leverage (DTI 29.6%), and an unblemished repayment history."
+          </div>
+        </div>
+
+        <div class="outro-cta-row" id="s4-cta">
+          <div class="cta-title">Veritas. Transparent Credit Decisions.</div>
+          <div class="repo-badge">github.com/gagancv28/Loan_Elegibility</div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      // Timeline Setup
+      const tl = gsap.timeline({ paused: true });
+
+      // --- SCENE 1 (0s - 4.5s) ---
+      tl.set("#scene-1", { autoAlpha: 1 }, 0);
+      tl.from("#s1-badge", { y: -30, opacity: 0, duration: 0.8, ease: "power3.out" }, 0.2);
+      tl.from("#s1-title", { y: 40, opacity: 0, duration: 1.0, ease: "power4.out" }, 0.5);
+      tl.from("#s1-sub", { y: 30, opacity: 0, duration: 0.8, ease: "power3.out" }, 0.8);
+      tl.to("#scene-1", { opacity: 0, y: -40, duration: 0.5, ease: "power2.in" }, 4.0);
+      tl.set("#scene-1", { autoAlpha: 0 }, 4.5);
+
+      // --- SCENE 2 (4.5s - 9.0s) ---
+      tl.set("#scene-2", { autoAlpha: 1 }, 4.5);
+      tl.from("#s2-banner", { scale: 0.94, opacity: 0, y: 30, duration: 0.7, ease: "back.out(1.4)" }, 4.6);
+      tl.from("#s2-kpis .kpi-card", {
+        opacity: 0,
+        y: 40,
+        stagger: 0.12,
+        duration: 0.6,
+        ease: "power3.out"
+      }, 5.1);
+      tl.to("#scene-2", { opacity: 0, y: -40, duration: 0.5, ease: "power2.in" }, 8.5);
+      tl.set("#scene-2", { autoAlpha: 0 }, 9.0);
+
+      // --- SCENE 3 (9.0s - 13.5s) ---
+      tl.set("#scene-3", { autoAlpha: 1 }, 9.0);
+      tl.from("#s3-card-left", { x: -60, opacity: 0, duration: 0.7, ease: "power3.out" }, 9.1);
+      tl.from("#s3-card-right", { x: 60, opacity: 0, duration: 0.7, ease: "power3.out" }, 9.2);
+
+      // Animate XAI bars
+      tl.to("#bar-cs", { width: "37%", duration: 0.8, ease: "power2.out" }, 9.6);
+      tl.to("#bar-dti", { width: "18%", duration: 0.8, ease: "power2.out" }, 9.8);
+      tl.to("#bar-income", { width: "14%", duration: 0.8, ease: "power2.out" }, 10.0);
+      tl.to("#bar-lti", { width: "10%", duration: 0.8, ease: "power2.out" }, 10.2);
+      tl.to("#bar-default", { width: "15%", duration: 0.8, ease: "power2.out" }, 10.4);
+
+      tl.to("#scene-3", { opacity: 0, y: -40, duration: 0.5, ease: "power2.in" }, 13.0);
+      tl.set("#scene-3", { autoAlpha: 0 }, 13.5);
+
+      // --- SCENE 4 (13.5s - 18.0s) ---
+      tl.set("#scene-4", { autoAlpha: 1 }, 13.5);
+      tl.from("#s4-memo", { scale: 0.92, opacity: 0, y: 30, duration: 0.8, ease: "back.out(1.2)" }, 13.6);
+      tl.from(".memo-stamp-graphic", { scale: 2.2, opacity: 0, rotation: 15, duration: 0.45, ease: "bounce.out" }, 14.3);
+      tl.from("#s4-cta", { y: 30, opacity: 0, duration: 0.7, ease: "power3.out" }, 14.8);
+
+      // Outro hold to 18s
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
